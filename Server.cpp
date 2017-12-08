@@ -41,6 +41,7 @@ void Server:: start() {
         int clientSocket2 = accept(serverSocket, (struct sockaddr*)&clientAddress2, &clientAddressLen2);
         cout << "Second player connected" << endl;
 
+        //letting the first player know he is number 1
         int first = 1;
         int n = write(clientSocket1, &first, sizeof(first));
         if (n == -1) {
@@ -48,6 +49,7 @@ void Server:: start() {
             return;
         }
 
+        //letting the second player know he is number 2
         int second = 2;
         n = write(clientSocket2, &second, sizeof(second));
         if (n == -1) {
@@ -58,6 +60,7 @@ void Server:: start() {
         if (clientSocket1 == -1 || clientSocket2 == -1) {
             throw "Error on accept";
         }
+        //keep switching between clients untill stop = true
         bool stop = false;
         while(!stop) {
             stop = handleClient(clientSocket1, clientSocket2);
@@ -71,7 +74,7 @@ void Server:: start() {
     }
 }
 
-// Handle requests from a specific client
+//gets move from a client and pass it to the other client
 bool Server::handleClient(int clientSocket1, int clientSocket2) {
     char buffer[10];
     cout << "got in handleclient"<<endl;

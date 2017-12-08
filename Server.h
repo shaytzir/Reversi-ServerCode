@@ -13,7 +13,6 @@ public:
 private:
     int port;
     int serverSocket; // the socket's file descriptor
-    int client;
     bool handleClient(int clientSocket1, int clientSocket2);
 };
 
