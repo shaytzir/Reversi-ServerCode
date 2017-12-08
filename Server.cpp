@@ -6,7 +6,7 @@
 #include <iostream>
 #include <stdio.h>
 using namespace std;
-#define MAX_CONNECTED_CLIENTS 10
+#define MAX_CONNECTED_CLIENTS 2
 
 Server:: Server( int port): port(port), serverSocket(0) {
     cout << "Server" << endl;
@@ -31,71 +31,75 @@ void Server:: start() {
 // Define the client socket's structures
     struct sockaddr_in clientAddress;
     socklen_t clientAddressLen;
+    struct sockaddr_in clientAddress2;
+    socklen_t clientAddressLen2;
+    // Accept a new client connection
     while(true) {
         cout << "Waiting for client connections..." << endl;
-// Accept a new client connection
-        int clientSocket = accept(serverSocket, (struct sockaddr*)&clientAddress, &clientAddressLen);
-        cout << "Client connected" << endl;
-        if (clientSocket == -1)
+        int clientSocket1 = accept(serverSocket, (struct sockaddr*)&clientAddress, &clientAddressLen);
+        cout << "First player connected" << endl;
+        int clientSocket2 = accept(serverSocket, (struct sockaddr*)&clientAddress2, &clientAddressLen2);
+        cout << "Second player connected" << endl;
+
+        int first = 1;
+        int n = write(clientSocket1, &first, sizeof(first));
+        if (n == -1) {
+            cout << "Error writing to socket1" << endl;
+            return;
+        }
+
+        int second = 2;
+        n = write(clientSocket2, &second, sizeof(second));
+        if (n == -1) {
+            cout << "Error writing to socket2" << endl;
+            return;
+        }
+
+        if (clientSocket1 == -1 || clientSocket2 == -1) {
             throw "Error on accept";
-        handleClient(clientSocket);
-// Close communication with the client
-        close(clientSocket);
+        }
+        bool stop = false;
+        while(!stop) {
+            stop = handleClient(clientSocket1, clientSocket2);
+            int temp = clientSocket1;
+            clientSocket1 = clientSocket2;
+            clientSocket2 = temp;
+        }
+
+        close(clientSocket1);
+        close(clientSocket2);
     }
 }
 
 // Handle requests from a specific client
-void Server::handleClient(int clientSocket) {
-    int arg1, arg2;
-    char op;
-    while (true) {
-// Read new exercise arguments
-        int n = read(clientSocket, &arg1, sizeof(arg1));
-        if (n == -1) {
-            cout << "Error reading arg1" << endl;
-            return;
-        }
-        if (n == 0) {
-            cout << "Client disconnected" << endl;
-            return;
-        }
-        n = read(clientSocket, &op, sizeof(op));
-        if (n == -1) {
-            cout << "Error reading operator" << endl;
-            return;
-        }
-        n = read(clientSocket, &arg2, sizeof(arg2));
-        if (n == -1) {
-            cout << "Error reading arg2" << endl;
-            return;
-        }
-        cout << "Got exercise: " << arg1 << op << arg2 <<
-             endl;
-        int result = calc(arg1, op, arg2);
-        // Write the result back to the client
-        n = write(clientSocket, &result, sizeof(result));
-        if (n == -1) {
-            cout << "Error writing to socket" << endl;
-            return;
-        }
+bool Server::handleClient(int clientSocket1, int clientSocket2) {
+    char buffer[10];
+    cout << "got in handleclient"<<endl;
+    int n = read(clientSocket1, buffer, sizeof(buffer));
+    if (n == -1) {
+        cout << "Error reading choice" << endl;
+        return true;
     }
+    if (n == 0 ) {
+        cout << "a Client Disconnect from server" << endl;
+        return true;
+    }
+
+    cout << "got move: " << buffer << endl;
+    n = write(clientSocket2, buffer, sizeof(buffer));
+    if (n == -1) {
+        cout << "Error writing choice" << endl;
+        return true;
+    }
+    if(n == 0) {
+        cout << "Client disconnected from server" << endl;
+        return true;
+    }
+    cout << "Move sent:" << buffer << endl;
+    return false;
 }
 
-int Server::calc(int arg1, const char op, int arg2) const {
-    switch (op) {
-        case '+':
-            return arg1 + arg2;
-        case '-':
-            return arg1 - arg2;
-        case '*':
-            return arg1 * arg2;
-        case '/':
-            return arg1 / arg2;
-        default:
-            cout << "Invalid operator" << endl;
-            return 0;
-    }
-}
+
 void Server::stop() {
     close(serverSocket);
 }

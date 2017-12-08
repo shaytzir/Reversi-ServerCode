@@ -13,8 +13,8 @@ public:
 private:
     int port;
     int serverSocket; // the socket's file descriptor
-    void handleClient(int clientSocket);
-    int calc(int arg1, const char op,int arg2) const;
+    int client;
+    bool handleClient(int clientSocket1, int clientSocket2);
 };
 
 #endif //SERVER_SERVER_H
