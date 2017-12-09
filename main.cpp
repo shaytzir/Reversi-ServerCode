@@ -1,9 +1,16 @@
 #include "Server.h"
 #include <iostream>
 #include <stdlib.h>
+#include <fstream>
 using namespace std;
+
 int main() {
-    Server server(8000);
+    //read server configuration
+    ifstream inFile;
+    inFile.open("./exe/ServerConfig.txt");
+    int port;
+    inFile >> port;
+    Server server(port);
     try {
         server.start();
     } catch (const char *msg) {
