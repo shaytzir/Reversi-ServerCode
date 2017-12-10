@@ -7,7 +7,7 @@ using namespace std;
 int main() {
     //read server configuration
     ifstream inFile;
-    inFile.open("./exe/ServerConfig.txt");
+    inFile.open("ServerConfig.txt");
     int port;
     inFile >> port;
     Server server(port);
@@ -17,4 +17,5 @@ int main() {
         cout << "Cannot start server. Reason: " << msg << endl;
         exit(-1);
     }
+    return 0;
 }
