@@ -1,5 +1,8 @@
 //
-// Created by shay on 12/25/17.
+// Shay Tzirin
+// ID: 315314930
+// Yuval Hoch
+// ID: 204468474
 //
 
 #ifndef SERVER_GAMESDETAIL_H
@@ -7,7 +10,6 @@
 
 #include <sys/socket.h>
 #include <string>
-
 using namespace std;
 
 enum STATUS {
@@ -22,10 +24,8 @@ public:
     int getP1Socket();
     int getP2Socket();
     void joinGame(int pNewSocket);
-
     GameDetails();
     ~GameDetails();
-
     STATUS getStatus() const;
 private:
     string name;

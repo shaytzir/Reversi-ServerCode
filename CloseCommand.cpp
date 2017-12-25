@@ -1,5 +1,8 @@
 //
-// Created by shay on 12/26/17.
+// Shay Tzirin
+// ID: 315314930
+// Yuval Hoch
+// ID: 204468474
 //
 
 #include "CloseCommand.h"

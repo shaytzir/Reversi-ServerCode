@@ -1,5 +1,8 @@
 //
-// Created by shay on 12/26/17.
+// Shay Tzirin
+// ID: 315314930
+// Yuval Hoch
+// ID: 204468474
 //
 
 #include <cstring>
@@ -81,7 +84,6 @@ void ListOfGames::listOfGames(vector<string> args) {
                         write(socket, &c, sizeof(c));
                     }
                 }
-
             }
         }
         c = '\n';
@@ -112,72 +114,14 @@ void ListOfGames::joinToGame(vector<string> args) {
             break;
         }
     }
-
     if (game == NULL) {
         check = -1;
         int n = write(socket, &check, sizeof(check));
     } else {
-        //int n = write(player1, &JOINED, JOINSIZE);
-        //if (n == -1) {
-            //throw "Error reading result from socket";
-        //}
-        //n = write(socket, &JOINED, JOINSIZE);
-        //if (n == -1) {
-            //throw "Error reading result from socket";
-        //}
         GameManager gMan(game);
         pthread_t gameThread;
         int rc = pthread_create(&gameThread, NULL, gMan.run, (void*)game);
     }
-    /*string name = args[0];
-    GameDetails* game;
-    sockets clientsSockets;
-    int socket = atoi(args[0].c_str());
-    int player1Socket = -1;
-    for (int i = 0 ; i <size(); i++) {
-        if ((getGame(i)->getStatus() == WAIT) && (strcmp(getGame(i)->getName().c_str(), name.c_str()) == 0)) {
-            game = getGame(i);
-            getGame(i)->joinGame(socket);
-            player1Socket = getGame(i)->getP1Socket();
-            break;
-        }
-    }
-    sendMassege(socket, 2);
-    sendMassege(player1Socket, 2);
-    int first = 1;
-    int n = write(player1Socket, &first, sizeof(first));
-    if (n == -1) {
-        throw "Error reading result from socket";
-    }
-    int second = 2;
-    n = write(socket, &second, sizeof(first));
-    if (n == -1) {
-        throw "Error reading result from socket";
-    }
-    clientsSockets.client1sock = player1Socket;
-    clientsSockets.client2sock = socket;
-    pthread_t gameThread;
-    int rc = pthread_create(&gameThread, NULL, handleClient, (void*)&clientsSockets);
-    //keep switching between clients untill stop = true
-    bool stop = false;
-    while(true) {
-        //stop = handleClient(clientSocket1, clientSocket2);
-        //int temp = clientSocket1;
-        //socket
-                //clientSocket1 = clientSocket2;
-        //clientSocket2 = temp;
-    }
-    close(socket);
-    close(player1Socket);
-    /*if (game == NULL) {
-        int n = write(socket, &NOGAME, NOGAMESIZE);
-    } else {
-        int n = write(player1, &JOINED, JOINSIZE);
-        n = write(socket, &JOINED, JOINSIZE);
-        GameManager gMan(game);
-        pthread_t gameThread;
-        int rc = pthread_create(&gameThread, NULL, gMan.run, (void*)&gMan);
-    }*/
 }
 
 void ListOfGames::sendMassege(int socket, int message) {
@@ -210,5 +154,3 @@ void *ListOfGames::handleClient(void *sockets) {
     cout << "Move sent:" << buffer << endl;
     return NULL;
 }
-
-

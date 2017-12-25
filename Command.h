@@ -1,5 +1,8 @@
 //
-// Created by shay on 12/25/17.
+// Shay Tzirin
+// ID: 315314930
+// Yuval Hoch
+// ID: 204468474
 //
 
 #ifndef SERVER_COMMAND_H
@@ -14,8 +17,6 @@ class Command {
 public:
     virtual void execute(vector<string> args, ListOfGames* games) = 0;
     virtual ~Command() {}
-private:
-
 };
 
 #endif //SERVER_COMMAND_H

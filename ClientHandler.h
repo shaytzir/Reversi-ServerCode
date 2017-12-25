@@ -1,5 +1,8 @@
 //
-// Created by shay on 12/25/17.
+// Shay Tzirin
+// ID: 315314930
+// Yuval Hoch
+// ID: 204468474
 //
 
 #ifndef SERVER_CLIENTHANDLER_H
@@ -12,20 +15,14 @@
 
 class ClientHandler {
 public:
-    ClientHandler(int client_Socket, vector<pthread_t*> threads, int index, CommandsManager* manager);
-    //void handle();
+    ClientHandler(int client_Socket, CommandsManager* manager);
     static void *handleCommand(void* clientH);
-
     static void* executeHandleCommand(void *tArgs) ;
-
     void openSocket(int client_Socket);
-
 private:
     CommandsManager *manager;
     vector<GameDetails*>  games;
     int socket;
-    vector<pthread_t*> threads;
-    int index;
 };
 
 

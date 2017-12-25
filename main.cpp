@@ -1,6 +1,11 @@
+//
+// Shay Tzirin
+// ID: 315314930
+// Yuval Hoch
+// ID: 204468474
+//
+
 #include "Server.h"
-#include <iostream>
-#include <stdlib.h>
 #include <fstream>
 using namespace std;
 
@@ -10,7 +15,7 @@ int main() {
     //inFile.open("ServerConfig.txt");
     //int port;
     //inFile >> port;
-    int port = 8000;
+    int port = 80000;
     Server server(port);
     try {
         server.start();

@@ -1,10 +1,12 @@
 //
-// Created by shay on 12/26/17.
+// Shay Tzirin
+// ID: 315314930
+// Yuval Hoch
+// ID: 204468474
 //
 
 #ifndef SERVER_LISTOFGAMES_H
 #define SERVER_LISTOFGAMES_H
-
 
 #include <vector>
 #include "GameDetails.h"
@@ -14,10 +16,12 @@
 #define JOINSIZE 19
 #define NOGAME "No Such Game To Join\n"
 #define NOGAMESIZE 21
+
 struct sockets {
     int client1sock;
     int client2sock;
 };
+
 class ListOfGames {
 public:
     ListOfGames(){}
@@ -25,8 +29,6 @@ public:
     void removeGame(string gameName);
     int size();
     GameDetails* getGame(int i);
-
-    //void sendMessageToClient(string msg);
     void startNewGame(vector<string> args);
     void listOfGames(vector<string> args);
     void joinToGame(vector<string> args);
@@ -36,6 +38,5 @@ private:
     void sendMassege(int socket, int message);
     static void *handleClient(void *sockets);
 };
-
 
 #endif //SERVER_LISTOFGAMES_H
