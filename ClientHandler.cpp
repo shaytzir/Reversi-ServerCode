@@ -16,22 +16,23 @@ ClientHandler::ClientHandler(int client_Socket, vector <pthread_t*> threadsVec, 
 void ClientHandler::handle() {
     pthread_t* clientHandle;
     this->threads.push_back(clientHandle);
-    int rc = pthread_create(threads[this->index], NULL, handleCommand, NULL);
+    int rc = pthread_create(threads[this->index], NULL, handleCommand, &this->index);
 }
 
 void *ClientHandler::handleCommand(void *clientSocket) {
-    char commandChar;
-    int buff = 50;
-    string command = "";
-    for (int i = 0; i < buff; i++) {
-        read(this->socket, &commandChar, sizeof(commandChar));
-        command.append(1u, commandChar);
+    char commandChar, command[50];
+    for (int i = 0; i < strlen(command); i++) {
+        read(socket, &commandChar, sizeof(commandChar));
+        command[i] = commandChar;
+        if (commandChar = '\0') {
+            break;
+        }
     }
     vector<string> args;
     char *name, *gameName;
     stringstream ss;
     name = strtok(command, " ");
-    ss << this->socket;
+    ss << socket;
     if (strcmp(name, "list_games") == 0) {
         args.push_back(name);
         args.push_back(ss.str());
@@ -40,6 +41,6 @@ void *ClientHandler::handleCommand(void *clientSocket) {
         args.push_back(gameName);
         args.push_back(ss.str());
     }
-    this->manager->executeCommand(name, args);
+    manager->executeCommand(name, args);
 }
 

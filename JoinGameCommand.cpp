@@ -9,10 +9,10 @@
 
 void JoinGameCommand::execute(vector<string> args, ListOfGames* games) {
     string name = args[0];
-    int socket = atoi(args[1]);
+    int socket = atoi(args[1].c_str());
     int player1 = -1;
     for (int i = 0 ; i <games->size(); i++) {
-        if ((games->getGame(i).getStatus() ==WAIT) && (strcmp(games->getGame(i).getName(), name) == 0)) {
+        if ((games->getGame(i).getStatus() ==WAIT) && (strcmp(games->getGame(i).getName().c_str(), name.c_str()) == 0)) {
             games->getGame(i).joinGame(socket);
             player1 = games->getGame(i).getP1Socket();
             break;

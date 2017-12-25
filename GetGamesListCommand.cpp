@@ -7,7 +7,7 @@
 #include "GetGamesListCommand.h"
 
 void GetGamesListCommand::execute(vector<string> args, ListOfGames* games) {
-    int socket = atoi(args[0]);
+    int socket = atoi(args[0].c_str());
     int n;
     string listOfGames = "";
     int numOfGames = games->size();

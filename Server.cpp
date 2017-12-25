@@ -17,6 +17,7 @@ Server:: Server( int port): port(port), serverSocket(0) {
     cout << "Server" << endl;
 }
 void Server:: start() {
+    int i = 0;
     //pthread_t threads[MAX_CONNECTED_CLIENTS];
 
     vector<pthread_t*> threads;
@@ -45,9 +46,7 @@ void Server:: start() {
     socklen_t clientAddressLen2;
     // Accept a new client connection
     pthread_t exit;
-    int rc = pthread_create(&exit, NULL, exitServer, NULL);
-
-    int i = 0;
+    int rc = pthread_create(&exit, NULL, exitServer, &i);
     while(!exit) {
         cout << "Waiting for client connections..." << endl;
         int clientSocket = accept(serverSocket, (struct sockaddr*)&clientAddress, &clientAddressLen);
@@ -56,28 +55,11 @@ void Server:: start() {
             throw "Error on accept";
         }
 
-        ClientHandler handler(clientSocket, threads, i, games);
+        ClientHandler* handler = new ClientHandler(clientSocket, threads, i, games);
         i++;
-
-
-
-
-
-
-
-
-
-
-
-
         //handler.handleCommand()
-socket
-
-
         /*int clientSocket2 = accept(serverSocket, (struct sockaddr*)&clientAddress2, &clientAddressLen2);
         cout << "Second player connected" << endl;
-
-
         //letting the first player know he is number 1
         int first = 1;
         int n = write(clientSocket1, &first, sizeof(first));
@@ -85,7 +67,6 @@ socket
             cout << "Error writing to socket1" << endl;
             return;
         }
-
         //letting the second player know he is number 2
         int second = 2;
         n = write(clientSocket2, &second, sizeof(second));
@@ -93,7 +74,6 @@ socket
             cout << "Error writing to socket2" << endl;
             return;
         }
-
         if (clientSocket1 == -1 || clientSocket2 == -1) {
             throw "Error on accept";
         }
@@ -105,20 +85,21 @@ socket
             clientSocket1 = clientSocket2;
             clientSocket2 = temp;
         }
-
         close(clientSocket1);
         close(clientSocket2);*/
     }
 }
 
 void *Server::exitServer(void* close) {
-    string exit;
-    cin >> exit;
-    if (strcmp(exit.c_str(), "exit") == 0) {
-        this->exit = true;
+    string input;
+    cin >> input;
+    if (strcmp(input.c_str(), "exit") == 0) {
+        //exitNow();
     }
 }
-
+void Server::exitNow() {
+    this->exit = true;
+}
 //gets move from a client and pass it to the other client
 bool Server::handleClient(int clientSocket1, int clientSocket2) {
     char buffer[10];
@@ -147,9 +128,10 @@ bool Server::handleClient(int clientSocket1, int clientSocket2) {
     return false;
 }
 
-
+/*
 void Server::stop() {
     close(serverSocket);
 }
+ */
 
 

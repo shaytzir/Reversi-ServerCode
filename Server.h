@@ -16,11 +16,12 @@ class Server {
 public:
     Server(int port);
     void start();
-    void stop();
+    static void stop();
 private:
     bool exit;
     int port;
-    void *exitServer(void* close);
+    static void *exitServer(void* close);
+    void exitNow();
     int serverSocket; // the socket's file descriptor
     bool handleClient(int clientSocket1, int clientSocket2);
 };
