@@ -6,17 +6,12 @@
 #include "StartGameCommand.h"
 #include "GetGamesListCommand.h"
 #include "JoinGameCommand.h"
-#include "PlayCommand.h"
 
 CommandsManager::CommandsManager() {
-
     this->games = new ListOfGames;
-
     commandsMap["start"] = new StartGameCommand();
     commandsMap["list_games"] = new GetGamesListCommand();
     commandsMap["join"] = new JoinGameCommand();
-    commandsMap["play"] = new PlayCommand();
-    //commandsMap["close"] = new CloseGameCommand(); //client cant close game
 }
 
 CommandsManager::~CommandsManager() {

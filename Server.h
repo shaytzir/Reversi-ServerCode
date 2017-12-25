@@ -2,10 +2,10 @@
 // Created by shay on 12/6/17.
 //
 #include <pthread.h>
-
 #include <cstdlib>
 #include <iostream>
 #include <vector>
+using namespace std;
 #ifndef SERVER_SERVER_H
 #define SERVER_SERVER_H
 struct ThreadArgs {
@@ -23,7 +23,7 @@ public:
 private:
     bool exit;
     int port;
-    std::vector<pthread_t*> threads;
+    vector<pthread_t*> threads;
     static void *exitServer(void* server);
     void exitNow();
     int serverSocket; // the socket's file descriptor

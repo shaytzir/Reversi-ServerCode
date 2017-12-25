@@ -7,11 +7,12 @@ GameManager::GameManager(GameDetails *g) {
 }
 
 void *GameManager::run(void *g) {
-    GameManager *man = (GameManager*)g;
-    int soc1 = man->game->getP1Socket();
-    int soc2 = man->game->getP2Socket();
+    GameDetails *man = (GameDetails*)g;
+    int soc1 = man->getP1Socket();
+    int soc2 = man->getP2Socket();
     int n;
     int first = 1;
+    cout << "im socket num: " << soc1 << endl;
     n = write(soc1, &first, sizeof(first));
     if (n == -1) {
         cout << "Error writing to socket1" << endl;
@@ -27,9 +28,30 @@ void *GameManager::run(void *g) {
         throw "Error on accept";
     }*/
     //keep switching between clients untill stop = true
-    bool stop = false;
-    while(!stop) {
-        stop = man->getMoves(soc1, soc2);
+    while(true) {
+        char buffer[10];
+        cout << "got in handleclient" <<endl;
+        int n = read(soc1, buffer, sizeof(buffer));
+        if (n == -1) {
+            cout << "Error reading choice" << endl;
+            break;
+        }
+        if (n == 0) {
+            cout << "a Client Disconnect from server" << endl;
+            break;
+        }
+
+        cout << "got move: " << buffer << endl;
+        n = write(soc2, buffer, sizeof(buffer));
+        if (n == -1) {
+            cout << "Error writing choice" << endl;
+            break;
+        }
+        if(n == 0) {
+            cout << "Client disconnected from server" << endl;
+            break;
+        }
+        cout << "Move sent:" << buffer << endl;
         int temp = soc1;
         soc1 = soc2;
         soc2 = temp;
@@ -40,7 +62,7 @@ void *GameManager::run(void *g) {
     close(soc2);
 }
 
-bool GameManager::getMoves(int soc1, int soc2) {
+/*bool GameManager::getMoves(int soc1, int soc2) {
     char buffer[10];
     cout << "got in handleclient"<<endl;
     int n = read(soc1, buffer, sizeof(buffer));
@@ -65,4 +87,4 @@ bool GameManager::getMoves(int soc1, int soc2) {
     }
     cout << "Move sent:" << buffer << endl;
     return false;
-}
+}*/

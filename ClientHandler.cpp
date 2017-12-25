@@ -59,6 +59,7 @@ void *ClientHandler::handleCommand(void *clientH) {
         gameName = strtok(gameName, ">");  ///////////doesnt work
         args.push_back(gameName);
         args.push_back(ss.str());
+        cout << ss.str() << endl;
     }
     handler->manager->executeCommand(com, args);
 }

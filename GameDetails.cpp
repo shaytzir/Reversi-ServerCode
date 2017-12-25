@@ -2,6 +2,7 @@
 // Created by shay on 12/25/17.
 //
 
+#include <iostream>
 #include "GameDetails.h"
 
 string GameDetails::getName() {
@@ -28,6 +29,7 @@ void GameDetails::joinGame(int pNewSocket) {
 GameDetails::GameDetails(string name, int psocket1, int psocket2) {
     this->name = name;
     this->player1Socket = psocket1;
+    cout << psocket1 << endl;
     this->player2Socket = psocket2;
     if (psocket2 == 0) {
         this->status = WAIT;

@@ -52,19 +52,30 @@ void ListOfGames::listOfGames(vector<string> args) {
     int n;
     string listOfGames = "";
     int numOfGames = size();
+    char *name;
+
     if (numOfGames == 0) {
         n = write(socket, &ZEROGAMES, ZEROGAMESLEN);
-
     } else {
         for (int i = 0; i < size(); i++) {
             if (getGame(i)->getStatus() == WAIT) {
-                listOfGames.append(getGame(i)->getName());
-                listOfGames.append("\n");
+                name = new char[getGame(i)->getName().length() + 1];
+                strcpy(name, getGame(i)->getName().c_str());
+                for (int j = 0; j < getGame(i)->getName().length(); j++) {
+                    char c = name[j];
+                    n = write(socket, &c, sizeof(c));
+                }
+                //listOfGames.append(getGame(i)->getName());
+                //listOfGames.append(",");
             }
         }
-
-        const char *finalList = listOfGames.c_str();
-        n = write(socket, finalList, sizeof(finalList));
+        //listOfGames.append("\n");
+        //for (int i = 0; i < listOfGames.length(); i++) {
+            //const char c = listOfGames[i];
+            //n = write(socket, &listOfGames[i], sizeof(listOfGames[i]));
+        //}
+        //const char *finalList = listOfGames.c_str();
+        //char c = listOfGames[]
     }
     if (n == -1) {
         throw "Error writing command to socket";
@@ -72,7 +83,6 @@ void ListOfGames::listOfGames(vector<string> args) {
     if (n == 0) {
         throw "Error, connection disconnected!";
     }
-
 }
 
 void ListOfGames::joinToGame(vector<string> args) {
@@ -83,6 +93,7 @@ void ListOfGames::joinToGame(vector<string> args) {
     for (int i = 0 ; i <size(); i++) {
         if ((getGame(i)->getStatus() ==WAIT) && (strcmp(getGame(i)->getName().c_str(), name.c_str()) == 0)) {
             game = getGame(i);
+            cout << "game num: " << i << endl;
             getGame(i)->joinGame(socket);
             player1 = getGame(i)->getP1Socket();
             break;
@@ -102,7 +113,7 @@ void ListOfGames::joinToGame(vector<string> args) {
         //}
         GameManager gMan(game);
         pthread_t gameThread;
-        int rc = pthread_create(&gameThread, NULL, gMan.run, (void*)&gMan);
+        int rc = pthread_create(&gameThread, NULL, gMan.run, (void*)game);
     }
     /*string name = args[0];
     GameDetails* game;
