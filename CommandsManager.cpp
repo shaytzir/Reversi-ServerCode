@@ -2,6 +2,7 @@
 // Created by shay on 12/25/17.
 //
 
+#include <iostream>
 #include "CommandsManager.h"
 #include "StartGameCommand.h"
 #include "GetGamesListCommand.h"
@@ -25,5 +26,6 @@ CommandsManager::~CommandsManager() {
 void CommandsManager::executeCommand(string command, vector<string> args) {
     //try to make args hold also the socket of the sender
     Command *commandObj = commandsMap[command];
+    cout << "CommandsManager" << endl;
     commandObj->execute(args, games);
 }

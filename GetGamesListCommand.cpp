@@ -4,6 +4,7 @@
 
 #include <cstdlib>
 #include <unistd.h>
+#include <iostream>
 #include "GetGamesListCommand.h"
 
 void GetGamesListCommand::execute(vector<string> args, ListOfGames* games) {
@@ -32,6 +33,7 @@ void GetGamesListCommand::execute(vector<string> args, ListOfGames* games) {
         throw "Error, connection disconnected!";
     }
     */
+    cout << "GetGamesListCommand" << endl;
     games->listOfGames(args);
 
 }

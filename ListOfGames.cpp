@@ -32,14 +32,15 @@ GameDetails* ListOfGames::getGame(int i) {
 
 void ListOfGames::startNewGame(vector<string> args) {
     string name = args[0];
-    int socket = atoi(args[1].c_str());
+    int socket = atoi(args[1].c_str()), check;
     for (int i = 0; i < size(); i++) {
         if (strcmp(getGame(i)->getName().c_str(), name.c_str()) == 0) {
-            int error = -1;
-            int n = write(socket, &error, sizeof(error));
+            check = -1;
+            int n = write(socket, &check, sizeof(check));
             if (n == -1) {
                 throw "Error writing command to socket";
             }
+            return;
         }
     }
     GameDetails *newGame= new GameDetails(name, socket, 0);
@@ -48,34 +49,45 @@ void ListOfGames::startNewGame(vector<string> args) {
 }
 
 void ListOfGames::listOfGames(vector<string> args) {
-    int socket = atoi(args[0].c_str());
+    int socket = atoi(args[1].c_str());
     int n;
+    cout << "socket: " << socket << endl;
     string listOfGames = "";
     int numOfGames = size();
-    char *name;
-
+    cout << "numOfGamesL " << numOfGames << endl;
+    cout << "numOfGames: " << numOfGames;
+    char *name, c;
     if (numOfGames == 0) {
         n = write(socket, &ZEROGAMES, ZEROGAMESLEN);
     } else {
-        for (int i = 0; i < size(); i++) {
+        for (int i = 0; i < numOfGames; i++) {
             if (getGame(i)->getStatus() == WAIT) {
                 name = new char[getGame(i)->getName().length() + 1];
                 strcpy(name, getGame(i)->getName().c_str());
                 for (int j = 0; j < getGame(i)->getName().length(); j++) {
-                    char c = name[j];
+                    c = name[j];
+                    cout << c;
                     n = write(socket, &c, sizeof(c));
+                    if (n == -1) {
+                        throw "Error writing command to socket";
+                    }
+                    if (n == 0) {
+                        throw "Error, connection disconnected!";
+                    }
+                    if ((j + 1) == getGame(i)->getName().length() && i + 1 != numOfGames) {
+                        c = ',';
+                        write(socket, &c, sizeof(c));
+                        c = ' ';
+                        write(socket, &c, sizeof(c));
+                    }
                 }
-                //listOfGames.append(getGame(i)->getName());
-                //listOfGames.append(",");
+
             }
         }
-        //listOfGames.append("\n");
-        //for (int i = 0; i < listOfGames.length(); i++) {
-            //const char c = listOfGames[i];
-            //n = write(socket, &listOfGames[i], sizeof(listOfGames[i]));
-        //}
-        //const char *finalList = listOfGames.c_str();
-        //char c = listOfGames[]
+        c = '\n';
+        n = write(socket, &c, sizeof(c));
+        int check = -1;
+        n = write(socket, &check, sizeof(check));
     }
     if (n == -1) {
         throw "Error writing command to socket";
@@ -88,6 +100,7 @@ void ListOfGames::listOfGames(vector<string> args) {
 void ListOfGames::joinToGame(vector<string> args) {
     string name = args[0];
     GameDetails* game = NULL;
+    int check;
     int socket = atoi(args[1].c_str());
     int player1 = -1;
     for (int i = 0 ; i <size(); i++) {
@@ -101,7 +114,8 @@ void ListOfGames::joinToGame(vector<string> args) {
     }
 
     if (game == NULL) {
-        int n = write(socket, &NOGAME, NOGAMESIZE);
+        check = -1;
+        int n = write(socket, &check, sizeof(check));
     } else {
         //int n = write(player1, &JOINED, JOINSIZE);
         //if (n == -1) {
