@@ -21,10 +21,16 @@ ClientHandler::ClientHandler(int client_Socket, vector <pthread_t*> threadsVec, 
 
 void *ClientHandler::handleCommand(void *clientH) {
     ClientHandler* handler = (ClientHandler*) clientH;
-    char commandChar, command[50];
+    char commandChar;
     int socket = handler->socket;
-
-    read(socket, command, sizeof(command));
+    string commandStr;
+    for (int i = 0; i < 50; i++) {
+        read(socket, &commandChar, sizeof(commandChar));
+        commandStr.append(1u, commandChar);
+        if (commandChar == '>' || strcmp(commandStr.c_str(), "list_games") == 0) {
+            break;
+        }
+    }
     /*for (int i = 0; i < sizeof(command); i++) {
         read(socket, &commandChar, sizeof(commandChar));
         command[i] = commandChar;
@@ -34,16 +40,23 @@ void *ClientHandler::handleCommand(void *clientH) {
     }*/
     //cout << "I am the command " << command << endl; /////////////////////////////////////// delete
     vector<string> args;
-    char *com, *gameName;
+    char *com, *gameName, *command;
+    command = new char[commandStr.length() + 1];
+    gameName = new char[commandStr.length() + 1];
     stringstream ss;
-    com = strtok(command, " ");
+    strcpy(command, commandStr.c_str());
+    com = strtok(command, " <");
     ss << socket;
 
     if (strcmp(com, "list_games") == 0) {
         args.push_back(com);
         args.push_back(ss.str());
     } else {
-        gameName = strtok(command, "\n");  ///////////doesnt work
+        //strcpy(command, commandStr.c_str());
+        size_t pos = commandStr.find("<");      // position of "live" in str
+        string str = commandStr.substr (pos + 1);
+        strcpy(gameName, str.c_str());
+        gameName = strtok(gameName, ">");  ///////////doesnt work
         args.push_back(gameName);
         args.push_back(ss.str());
     }

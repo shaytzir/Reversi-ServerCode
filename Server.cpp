@@ -49,17 +49,14 @@ void Server:: start() {
     while(!exit) {
         cout << "Waiting for client connections..." << endl;
         int clientSocket = accept(serverSocket, (struct sockaddr*)&clientAddress, &clientAddressLen);
-
-        cout << "First player connected" << endl;
+        cout << "Client connected" << endl;
         if (clientSocket == -1) {
             throw "Error on accept";
         }
-
         ClientHandler handler(clientSocket, threads, i, man);
-
         pthread_t* clientHandle = new pthread_t;
         this->threads.push_back(clientHandle);
-        int rc = pthread_create(threads.at(i), NULL, handler.handleCommand, &handler);
+        int rc = pthread_create(threads[i], NULL, handler.handleCommand, &handler);
 
         //handler->handle();
         i++;
@@ -97,18 +94,16 @@ void Server:: start() {
         close(clientSocket2);
          */
     }
+    pthread_exit(NULL);
 }
 
 void *Server::exitServer(void* server) {
     Server* ser = (Server*)server;
-    cout << "got into Exit Server" <<endl;
     string input;
-    cin >> input;
-    cout<< "this is " << input <<endl;
-    if (strcmp(input.c_str(), "exit") == 0) {
-        cout << "its good" << endl;
-        ser->exit = true;
-    }
+    do {
+        cin >> input;
+    }while(strcmp(input.c_str(), "exit") != 0);
+    ser->exit = true;
 }
 void Server::exitNow() {
     this->exit = true;

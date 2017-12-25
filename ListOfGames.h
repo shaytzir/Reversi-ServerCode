@@ -14,6 +14,10 @@
 #define JOINSIZE 19
 #define NOGAME "No Such Game To Join\n"
 #define NOGAMESIZE 21
+struct sockets {
+    int client1sock;
+    int client2sock;
+};
 class ListOfGames {
 public:
     ListOfGames(){}
@@ -29,7 +33,8 @@ public:
     void closeGame(vector<string> args);
 private:
     vector<GameDetails*> games;
-
+    void sendMassege(int socket, int message);
+    static void *handleClient(void *sockets);
 };
 
 

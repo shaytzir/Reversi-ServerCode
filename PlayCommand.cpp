@@ -8,7 +8,7 @@
 #include "PlayCommand.h"
 
 void PlayCommand::execute(vector<string> args, ListOfGames *games) {
-    cout << "EXECUTE PLAY MOVE";
+    /*cout << "EXECUTE PLAY MOVE";
     int senderSocket = atoi(args[0].c_str());
     const char* move = args[1].c_str(); //getting the move as "x,y"
 
@@ -22,6 +22,6 @@ void PlayCommand::execute(vector<string> args, ListOfGames *games) {
             int n = write(receiveSocket, move, sizeof(move));
             break;
         }
-    }
+    }*/
 
 }
