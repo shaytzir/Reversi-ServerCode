@@ -1,17 +1,27 @@
 #include "Server.h"
+#include "ClientHandler.h"
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
 #include <string.h>
 #include <iostream>
 #include <stdio.h>
+#include <cstdlib>
+
+
 using namespace std;
-#define MAX_CONNECTED_CLIENTS 2
+#define MAX_CONNECTED_CLIENTS   10
 
 Server:: Server( int port): port(port), serverSocket(0) {
+    exit = false;
     cout << "Server" << endl;
 }
 void Server:: start() {
+    //pthread_t threads[MAX_CONNECTED_CLIENTS];
+
+    vector<pthread_t*> threads;
+
+    ListOfGames games;
 // Create a socket point
     serverSocket = socket(AF_INET, SOCK_STREAM,0);
     if (serverSocket == - 1 ) {
@@ -34,12 +44,39 @@ void Server:: start() {
     struct sockaddr_in clientAddress2;
     socklen_t clientAddressLen2;
     // Accept a new client connection
-    while(true) {
+    pthread_t exit;
+    int rc = pthread_create(&exit, NULL, exitServer, NULL);
+
+    int i = 0;
+    while(!exit) {
         cout << "Waiting for client connections..." << endl;
-        int clientSocket1 = accept(serverSocket, (struct sockaddr*)&clientAddress, &clientAddressLen);
+        int clientSocket = accept(serverSocket, (struct sockaddr*)&clientAddress, &clientAddressLen);
         cout << "First player connected" << endl;
-        int clientSocket2 = accept(serverSocket, (struct sockaddr*)&clientAddress2, &clientAddressLen2);
+        if (clientSocket == -1) {
+            throw "Error on accept";
+        }
+
+        ClientHandler handler(clientSocket, threads, i, games);
+        i++;
+
+
+
+
+
+
+
+
+
+
+
+
+        //handler.handleCommand()
+socket
+
+
+        /*int clientSocket2 = accept(serverSocket, (struct sockaddr*)&clientAddress2, &clientAddressLen2);
         cout << "Second player connected" << endl;
+
 
         //letting the first player know he is number 1
         int first = 1;
@@ -64,13 +101,21 @@ void Server:: start() {
         bool stop = false;
         while(!stop) {
             stop = handleClient(clientSocket1, clientSocket2);
-            int temp = clientSocket1;
+            int temp = clientSocket1;socket
             clientSocket1 = clientSocket2;
             clientSocket2 = temp;
         }
 
         close(clientSocket1);
-        close(clientSocket2);
+        close(clientSocket2);*/
+    }
+}
+
+void *Server::exitServer(void* close) {
+    string exit;
+    cin >> exit;
+    if (strcmp(exit.c_str(), "exit") == 0) {
+        this->exit = true;
     }
 }
 
@@ -106,3 +151,5 @@ bool Server::handleClient(int clientSocket1, int clientSocket2) {
 void Server::stop() {
     close(serverSocket);
 }
+
+
