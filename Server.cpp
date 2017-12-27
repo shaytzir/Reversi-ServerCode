@@ -4,12 +4,9 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <string.h>
-#include <iostream>
-#include <stdio.h>
-#include <cstdlib>
-
-
 using namespace std;
+
+
 #define MAX_CONNECTED_CLIENTS   10
 
 Server:: Server( int port): port(port), serverSocket(0) {
@@ -20,9 +17,10 @@ void Server:: start() {
     int i = 0;
     //pthread_t threads[MAX_CONNECTED_CLIENTS];
 
-    vector<pthread_t*> threads;
 
-    ListOfGames games;
+    CommandsManager* man = new CommandsManager();
+
+
 // Create a socket point
     serverSocket = socket(AF_INET, SOCK_STREAM,0);
     if (serverSocket == - 1 ) {
@@ -45,18 +43,28 @@ void Server:: start() {
     struct sockaddr_in clientAddress2;
     socklen_t clientAddressLen2;
     // Accept a new client connection
-    pthread_t exit;
-    int rc = pthread_create(&exit, NULL, exitServer, &i);
+    pthread_t exitThread;
+    int rc = pthread_create(&exitThread, NULL, exitServer, this);
+
     while(!exit) {
         cout << "Waiting for client connections..." << endl;
         int clientSocket = accept(serverSocket, (struct sockaddr*)&clientAddress, &clientAddressLen);
+
         cout << "First player connected" << endl;
         if (clientSocket == -1) {
             throw "Error on accept";
         }
 
-        ClientHandler* handler = new ClientHandler(clientSocket, threads, i, games);
+        ClientHandler handler(clientSocket, threads, i, man);
+
+        pthread_t* clientHandle = new pthread_t;
+        this->threads.push_back(clientHandle);
+        int rc = pthread_create(threads.at(i), NULL, handler.handleCommand, &handler);
+
+        //handler->handle();
         i++;
+
+
         //handler.handleCommand()
         /*int clientSocket2 = accept(serverSocket, (struct sockaddr*)&clientAddress2, &clientAddressLen2);
         cout << "Second player connected" << endl;
@@ -86,21 +94,26 @@ void Server:: start() {
             clientSocket2 = temp;
         }
         close(clientSocket1);
-        close(clientSocket2);*/
+        close(clientSocket2);
+         */
     }
 }
 
-void *Server::exitServer(void* close) {
+void *Server::exitServer(void* server) {
+    Server* ser = (Server*)server;
+    cout << "got into Exit Server" <<endl;
     string input;
     cin >> input;
+    cout<< "this is " << input <<endl;
     if (strcmp(input.c_str(), "exit") == 0) {
-        //exitNow();
+        cout << "its good" << endl;
+        ser->exit = true;
     }
 }
 void Server::exitNow() {
     this->exit = true;
 }
-//gets move from a client and pass it to the other client
+/*/gets move from a client and pass it to the other client
 bool Server::handleClient(int clientSocket1, int clientSocket2) {
     char buffer[10];
     cout << "got in handleclient"<<endl;
@@ -126,7 +139,7 @@ bool Server::handleClient(int clientSocket1, int clientSocket2) {
     }
     cout << "Move sent:" << buffer << endl;
     return false;
-}
+}*/
 
 /*
 void Server::stop() {

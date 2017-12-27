@@ -10,7 +10,7 @@ int main() {
     //inFile.open("ServerConfig.txt");
     //int port;
     //inFile >> port;
-    int port = 8005;
+    int port = 8000;
     Server server(port);
     try {
         server.start();

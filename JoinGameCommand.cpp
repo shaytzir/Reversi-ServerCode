@@ -8,7 +8,7 @@
 #include "JoinGameCommand.h"
 
 void JoinGameCommand::execute(vector<string> args, ListOfGames* games) {
-    string name = args[0];
+   /* string name = args[0];
     int socket = atoi(args[1].c_str());
     int player1 = -1;
     for (int i = 0 ; i <games->size(); i++) {
@@ -28,6 +28,7 @@ void JoinGameCommand::execute(vector<string> args, ListOfGames* games) {
         n = write(socket, &JOINED, JOINSIZE);
         int second = 2;
         n = write(socket, &second, sizeof(second));
-    }
+    }*/
+    games->joinToGame(args);
 
 }

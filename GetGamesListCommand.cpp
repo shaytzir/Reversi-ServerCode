@@ -7,7 +7,7 @@
 #include "GetGamesListCommand.h"
 
 void GetGamesListCommand::execute(vector<string> args, ListOfGames* games) {
-    int socket = atoi(args[0].c_str());
+   /* int socket = atoi(args[0].c_str());
     int n;
     string listOfGames = "";
     int numOfGames = games->size();
@@ -31,6 +31,7 @@ void GetGamesListCommand::execute(vector<string> args, ListOfGames* games) {
     if (n == 0) {
         throw "Error, connection disconnected!";
     }
-
+    */
+    games->listOfGames(args);
 
 }

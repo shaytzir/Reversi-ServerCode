@@ -8,7 +8,7 @@
 #include "StartGameCommand.h"
 
 void StartGameCommand::execute(vector<string> args, ListOfGames* games) {
-    string name = args[0];
+    /*string name = args[0];
     int socket = atoi(args[1].c_str());
     for (int i = 0; i < games->size(); i++) {
         if (strcmp(games->getGame(i).getName().c_str(), name.c_str()) == 0) {
@@ -17,9 +17,9 @@ void StartGameCommand::execute(vector<string> args, ListOfGames* games) {
             /*
              * check if failed bla bla
              */
-        }
-    }
-    GameDetails newGame(name, socket, 0);
-
+      //  }
+    //}
+   // GameDetails newGame(name, socket, 0);
+    games->startNewGame(args);
 
 }

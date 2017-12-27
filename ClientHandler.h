@@ -12,18 +12,18 @@
 
 class ClientHandler {
 public:
-    ClientHandler(int client_Socket, vector<pthread_t*> threads, int index, ListOfGames games);
-    void handle();
-    static void *handleCommand(void* clientSocket);
+    ClientHandler(int client_Socket, vector<pthread_t*> threads, int index, CommandsManager* manager);
+    //void handle();
+    static void *handleCommand(void* clientH);
 
     static void* executeHandleCommand(void *tArgs) ;
 
     void openSocket(int client_Socket);
 
 private:
-    static CommandsManager *manager;
+    CommandsManager *manager;
     vector<GameDetails*>  games;
-    static int socket;
+    int socket;
     vector<pthread_t*> threads;
     int index;
 };

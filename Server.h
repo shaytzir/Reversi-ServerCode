@@ -3,6 +3,9 @@
 //
 #include <pthread.h>
 
+#include <cstdlib>
+#include <iostream>
+#include <vector>
 #ifndef SERVER_SERVER_H
 #define SERVER_SERVER_H
 struct ThreadArgs {
@@ -20,7 +23,8 @@ public:
 private:
     bool exit;
     int port;
-    static void *exitServer(void* close);
+    std::vector<pthread_t*> threads;
+    static void *exitServer(void* server);
     void exitNow();
     int serverSocket; // the socket's file descriptor
     bool handleClient(int clientSocket1, int clientSocket2);

@@ -36,3 +36,7 @@ GameDetails::GameDetails(string name, int psocket1, int psocket2) {
     }
 
 }
+
+GameDetails::~GameDetails() {};
+
+

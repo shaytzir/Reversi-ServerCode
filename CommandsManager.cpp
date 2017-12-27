@@ -8,12 +8,14 @@
 #include "JoinGameCommand.h"
 #include "PlayCommand.h"
 
-CommandsManager::CommandsManager(ListOfGames* games) {
+CommandsManager::CommandsManager() {
+
+    this->games = new ListOfGames;
+
     commandsMap["start"] = new StartGameCommand();
     commandsMap["list_games"] = new GetGamesListCommand();
     commandsMap["join"] = new JoinGameCommand();
     commandsMap["play"] = new PlayCommand();
-    this->games = games;
     //commandsMap["close"] = new CloseGameCommand(); //client cant close game
 }
 
@@ -28,5 +30,5 @@ CommandsManager::~CommandsManager() {
 void CommandsManager::executeCommand(string command, vector<string> args) {
     //try to make args hold also the socket of the sender
     Command *commandObj = commandsMap[command];
-    commandObj->execute(args, this->games);
+    commandObj->execute(args, games);
 }

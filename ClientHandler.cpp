@@ -6,41 +6,47 @@
 
 using namespace std;
 
-ClientHandler::ClientHandler(int client_Socket, vector <pthread_t*> threadsVec, int i, ListOfGames games) {
+ClientHandler::ClientHandler(int client_Socket, vector <pthread_t*> threadsVec, int i, CommandsManager* manager) {
     this->socket = client_Socket;
     this->threads = threadsVec;
     this->index = i;
-    this->manager = new CommandsManager(&games);
+    this->manager = manager;
 }
 
-void ClientHandler::handle() {
+/*void ClientHandler::handle() {
     pthread_t* clientHandle;
     this->threads.push_back(clientHandle);
     int rc = pthread_create(threads[this->index], NULL, handleCommand, &this->index);
-}
+}*/
 
-void *ClientHandler::handleCommand(void *clientSocket) {
+void *ClientHandler::handleCommand(void *clientH) {
+    ClientHandler* handler = (ClientHandler*) clientH;
     char commandChar, command[50];
-    for (int i = 0; i < strlen(command); i++) {
+    int socket = handler->socket;
+
+    read(socket, command, sizeof(command));
+    /*for (int i = 0; i < sizeof(command); i++) {
         read(socket, &commandChar, sizeof(commandChar));
         command[i] = commandChar;
-        if (commandChar = '\0') {
+        if (commandChar == '\n') {
             break;
         }
-    }
+    }*/
+    //cout << "I am the command " << command << endl; /////////////////////////////////////// delete
     vector<string> args;
-    char *name, *gameName;
+    char *com, *gameName;
     stringstream ss;
-    name = strtok(command, " ");
+    com = strtok(command, " ");
     ss << socket;
-    if (strcmp(name, "list_games") == 0) {
-        args.push_back(name);
+
+    if (strcmp(com, "list_games") == 0) {
+        args.push_back(com);
         args.push_back(ss.str());
     } else {
-        gameName = strtok(command, "\n");
+        gameName = strtok(command, "\n");  ///////////doesnt work
         args.push_back(gameName);
         args.push_back(ss.str());
     }
-    manager->executeCommand(name, args);
+    handler->manager->executeCommand(com, args);
 }
 
