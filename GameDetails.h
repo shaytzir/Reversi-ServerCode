@@ -19,7 +19,7 @@ enum STATUS {
 class GameDetails {
 
 public:
-    GameDetails(string name, int psocket1, int psocket2);
+    GameDetails(string &name, int psocket1, int psocket2);
     string getName();
     int getP1Socket();
     int getP2Socket();

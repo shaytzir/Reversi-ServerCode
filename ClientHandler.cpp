@@ -47,7 +47,7 @@ void *ClientHandler::handleCommand(void *clientH) {
         gameName = strtok(gameName, ">");
         args.push_back(gameName);
         args.push_back(ss.str());
-        cout << ss.str() << endl;
+        cout << "DEBUG: GOT INTO CLIENTHANDLER. HANDLE SOCKET:" <<ss.str() << endl;
     }
     handler->manager->executeCommand(com, args);
 }

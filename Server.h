@@ -9,15 +9,14 @@
 #include <cstdlib>
 #include <iostream>
 #include <vector>
+#include <unistd.h>
+#include "CommandsManager.h"
+
 using namespace std;
 
 #ifndef SERVER_SERVER_H
 #define SERVER_SERVER_H
 
-struct ThreadArgs {
-    int i;
-    pthread_t thread ;
-};
 
 class Server {
 
@@ -29,6 +28,7 @@ private:
     bool exit;
     int port;
     vector<pthread_t*> threads;
+    vector<int> clientSockets;
     static void *exitServer(void* server);
     void exitNow();
     int serverSocket; // the socket's file descriptor
