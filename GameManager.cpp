@@ -17,8 +17,7 @@ void *GameManager::run(void *g) {
     GameDetails *man = (GameDetails*)g;
     int soc1 = man->getP1Socket();
     int soc2 = man->getP2Socket();
-    int n;
-    int first = 1;
+    int n,check = 1, first = 1;
     cout << "im socket num: " << soc1 << endl;
     n = write(soc1, &first, sizeof(first));
     if (n == -1) {
@@ -35,7 +34,7 @@ void *GameManager::run(void *g) {
     while(true) {
         char buffer[10];
         cout << "got in handleclient" <<endl;
-        int n = read(soc1, buffer, sizeof(buffer));
+        n = read(soc1, buffer, sizeof(buffer));
         if (n == -1) {
             cout << "Error reading choice" << endl;
             break;
@@ -44,6 +43,7 @@ void *GameManager::run(void *g) {
             cout << "a Client Disconnect from server" << endl;
             break;
         }
+        write(soc1, &check, sizeof(check));
         cout << "got move: " << buffer << endl;
         n = write(soc2, buffer, sizeof(buffer));
         if (n == -1) {
@@ -54,6 +54,7 @@ void *GameManager::run(void *g) {
             cout << "Client disconnected from server" << endl;
             break;
         }
+        write(soc2, &check, sizeof(check));
         cout << "Move sent:" << buffer << endl;
         int temp = soc1;
         soc1 = soc2;

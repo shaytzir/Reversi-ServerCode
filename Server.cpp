@@ -99,8 +99,10 @@ void *Server::exitServer(void* server) {
 
 void Server::closeTrheads() {
     void *status;
+    int signToClose = -1;
     for (int i = 0; i < this->clientSockets.size(); i++) {
-        close(clientSockets[i]);
+        write(clientSockets[i], &signToClose, sizeof(signToClose));
+        //close(clientSockets[i]);
     }
     for (int i = 0; i < this->threads.size(); i++) {
         pthread_cancel(*this->threads[i]);
