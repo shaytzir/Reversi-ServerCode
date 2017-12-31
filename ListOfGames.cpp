@@ -14,11 +14,6 @@
 
 pthread_mutex_t list_lock;
 
-void ListOfGames::addNewGame(GameDetails* game) {
-    pthread_mutex_lock(&list_lock);
-    this->games.push_back(game);
-    pthread_mutex_unlock(&list_lock);
-}
 
 void ListOfGames::removeGame(string gameName) {
     cout << "DEBUG: before lock in removeGame" << endl;
@@ -36,21 +31,20 @@ void ListOfGames::removeGame(string gameName) {
 }
 
 
-GameDetails* ListOfGames::getGame(int i) {
-    pthread_mutex_lock(&list_lock);
-    GameDetails* game = this->games[i];
-    pthread_mutex_unlock(&list_lock);
-    return game;
-}
 
 void ListOfGames::startNewGame(vector<string> args) {
     string name = args[0];
     int socket = atoi(args[1].c_str());
     int check;
+   // char* message; //stays empty if the name is valid
     cout << "DUBUG: startNewGame in listofgames before lock" << endl;
     pthread_mutex_lock(&list_lock);
     for (int i = 0; i < this->games.size(); i++) {
         if (strcmp(this->games[i]->getName().c_str(), name.c_str()) == 0) {
+     //       int m = write(socket, &EXISTS, EXISTSLEN);
+     //       if (m == -1) {
+     //           throw "Error writing to client";
+     //       }
             check = -1;
             int n = write(socket, &check, sizeof(check));
             if (n == -1) {
@@ -59,6 +53,7 @@ void ListOfGames::startNewGame(vector<string> args) {
             return;
         }
     } ///////////////////////////////?
+  //  write(socket, message, sizeof(message));
     pthread_mutex_unlock(&list_lock);
     cout << "DUBUG: startNewGame in listofgames after lock" << endl;
 
@@ -83,6 +78,8 @@ void ListOfGames::listOfGames(vector<string> args) {
     char *name, c;
     if (numOfGames == 0) {
         n = write(socket, &ZEROGAMES, ZEROGAMESLEN);
+        int check = -1;
+        n = write(socket, &check, sizeof(check));
     } else {
         for (int i = 0; i < numOfGames; i++) {
             GameDetails* curG = this->games[i];
@@ -154,8 +151,4 @@ void ListOfGames::joinToGame(vector<string> args) {
      * how to make this point wait until the thread "gman.run" is over
      */
     removeGame(game->getName());
-}
-
-void ListOfGames::sendMassege(int socket, int message) {
-    write(socket, &message, sizeof(message));
 }

@@ -106,7 +106,7 @@ void Server::closeTrheads() {
         pthread_cancel(*this->threads[i]);
         pthread_join(*this->threads[i], &status);
     }
-    close(serverSocket);
+    //close(serverSocket);
 }
 
 void *Server::mainThread(void *obj) {
