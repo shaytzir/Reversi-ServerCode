@@ -9,6 +9,5 @@
 #include "GetGamesListCommand.h"
 
 void GetGamesListCommand::execute(vector<string> args, ListOfGames* games) {
-    cout << "DEBUG : GOT INTO EXECUTE IN GetGamesListCommand" << endl;
     games->listOfGames(args);
 }

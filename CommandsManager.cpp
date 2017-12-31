@@ -29,6 +29,5 @@ CommandsManager::~CommandsManager() {
 void CommandsManager::executeCommand(string command, vector<string> args) {
     //try to make args hold also the socket of the sender
     Command *commandObj = commandsMap[command];
-    cout << "CommandsManager" << endl;
     commandObj->execute(args, games);
 }

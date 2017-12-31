@@ -20,10 +20,16 @@ ClientHandler::ClientHandler(int client_Socket, CommandsManager* manager) {
 void *ClientHandler::handleCommand(void *clientH) {
     ClientHandler* handler = (ClientHandler*) clientH;
     char commandChar;
-    int socket = handler->socket;
+    int socket = handler->socket, n;
     string commandStr;
     for (int i = 0; i < 50; i++) {
-        read(socket, &commandChar, sizeof(commandChar));
+        n = read(socket, &commandChar, sizeof(commandChar));
+        if (n == -1) {
+            throw "ERROR";
+        }
+        if (n == 0) {
+            throw "ERROR";
+        }
         commandStr.append(1u, commandChar);
         if (commandChar == '>' || strcmp(commandStr.c_str(), "list_games") == 0) {
             break;
@@ -47,7 +53,6 @@ void *ClientHandler::handleCommand(void *clientH) {
         gameName = strtok(gameName, ">");
         args.push_back(gameName);
         args.push_back(ss.str());
-        cout << "DEBUG: GOT INTO CLIENTHANDLER. HANDLE SOCKET:" <<ss.str() << endl;
     }
     handler->manager->executeCommand(com, args);
 }

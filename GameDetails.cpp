@@ -32,7 +32,6 @@ void GameDetails::joinGame(int pNewSocket) {
 GameDetails::GameDetails(string &name, int psocket1, int psocket2) {
     this->name = name;
     this->player1Socket = psocket1;
-    cout << "DEBUG : got into GameDetails ctor. socket 1 is:" << psocket1 <<endl;
     this->player2Socket = psocket2;
     if (psocket2 == 0) {
         this->status = WAIT;

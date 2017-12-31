@@ -16,11 +16,10 @@
 #define JOINSIZE 19
 #define EXISTS "Please Start Another Game With Different Name\n"
 #define EXISTSLEN 46
-
-struct sockets {
-    int client1sock;
-    int client2sock;
-};
+#define JOINANOTHER "There's No Game With This Name. Please Join Another One\n"
+#define JOINANOTHERLEN 56
+#define CREATEDAGAME "A Game Was Created!\n"
+#define CREATEDLEN 20
 
 class ListOfGames {
 public:

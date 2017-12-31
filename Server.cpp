@@ -68,23 +68,6 @@ void Server:: start() {
     //ser->exit = true;
     closeTrheads();
     pthread_cancel(exitThread);
-
-    // Accept a new client connection
-    /*pthread_t exitThread;
-    int rc = pthread_create(&exitThread, NULL, exitServer, this);
-    while(!exit) {
-        cout << "Waiting for client connections..." << endl;
-        int clientSocket = accept(serverSocket, (struct sockaddr*)&clientAddress, &clientAddressLen);
-        cout << "Client connected" << endl;
-        if (clientSocket == -1) {
-            throw "Error on accept";
-        }
-        ClientHandler handler(clientSocket, man);
-        pthread_t* clientHandle = new pthread_t;
-        this->threads.push_back(clientHandle);
-        int rc = pthread_create(threads[i], NULL, handler.handleCommand, &handler);
-        i++;
-    }*/
 }
 
 void *Server::exitServer(void* server) {
@@ -99,16 +82,14 @@ void *Server::exitServer(void* server) {
 
 void Server::closeTrheads() {
     void *status;
-    int signToClose = -1;
     for (int i = 0; i < this->clientSockets.size(); i++) {
-        write(clientSockets[i], &signToClose, sizeof(signToClose));
-        //close(clientSockets[i]);
+        close(clientSockets[i]);
     }
     for (int i = 0; i < this->threads.size(); i++) {
         pthread_cancel(*this->threads[i]);
         pthread_join(*this->threads[i], &status);
     }
-    //close(serverSocket);
+    close(serverSocket);
 }
 
 void *Server::mainThread(void *obj) {
