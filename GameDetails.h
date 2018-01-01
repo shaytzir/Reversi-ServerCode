@@ -13,19 +13,44 @@
 using namespace std;
 
 enum STATUS {
-    WAIT, PLAY, END
+    WAIT, PLAY
 };
 
 class GameDetails {
 
 public:
+    /**
+     * Constructor
+     * @param name name of the game
+     * @param psocket1 socket of the first player
+     * @param psocket2 socket of the second player
+     */
     GameDetails(string &name, int psocket1, int psocket2);
+    /**
+     * getter
+     * @return this game's name
+     */
     string getName();
+    /**
+     * getter
+     * @return the first player socket
+     */
     int getP1Socket();
+    /**
+     * getter
+     * @return the second player socket
+     */
     int getP2Socket();
+    /**
+     * joining a game changing the status from WAIT to PLAY, and edits the
+     * second player socket to be as given as an input
+     * @param pNewSocket the joining (second) player socket
+     */
     void joinGame(int pNewSocket);
-    GameDetails();
-    ~GameDetails();
+    /**
+     * getter
+     * @return this game's status
+     */
     STATUS getStatus() const;
 private:
     string name;

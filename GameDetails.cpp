@@ -25,13 +25,17 @@ int GameDetails::getP2Socket() {
 }
 
 void GameDetails::joinGame(int pNewSocket) {
+    //by joining the game, we update the second player socket to be as given - 'pNewSocket'
     this->player2Socket = pNewSocket;
+    //and updating the status to PLAY
     this->status = PLAY;
 }
 
 GameDetails::GameDetails(string &name, int psocket1, int psocket2) {
     this->name = name;
     this->player1Socket = psocket1;
+    //usually when opening a new game we will have only 1 player
+    //thus will enter the second one as '0', if so, the game is in WAIT status
     this->player2Socket = psocket2;
     if (psocket2 == 0) {
         this->status = WAIT;
@@ -41,6 +45,5 @@ GameDetails::GameDetails(string &name, int psocket1, int psocket2) {
 
 }
 
-GameDetails::~GameDetails() {};
 
 

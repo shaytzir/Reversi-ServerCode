@@ -21,19 +21,22 @@ using namespace std;
 class Server {
 
 public:
+    /**
+     * constructor for the server
+     * @param port  server's socket
+     */
     Server(int port);
+    /**
+     * starting the servers program
+     */
     void start();
-    static void stop();
 private:
-    bool exit;
     int port;
     vector<pthread_t*> threads;
     vector<int> clientSockets;
-    static void *exitServer(void* server);
     void exitNow();
     int serverSocket; // the socket's file descriptor
-    bool handleClient(int clientSocket1, int clientSocket2);
-    void closeTrheads();
+    void closeThreads();
     static void *mainThread(void* obj);
 };
 

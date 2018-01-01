@@ -24,9 +24,25 @@
 class ListOfGames {
 public:
     ListOfGames(){}
+    /**
+     * removing a game from this list of games
+     * @param gameName a name of a game to remove
+     */
     void removeGame(string gameName);
+    /**
+     * start new game command - creating new game and adding to list
+     * @param args parameters, name of new game and the creator's socket
+     */
     void startNewGame(vector<string> args);
+    /**
+     * list_games command - writing to the requesting socket the list of games
+     * @param args parameters - the requtesting client's socket
+     */
     void listOfGames(vector<string> args);
+    /**
+     * join a game comman - editing an existing game in the list, and making the clients play
+     * @param args parameters, name of a game to join + joining client's socket
+     */
     void joinToGame(vector<string> args);
 private:
     vector<GameDetails*> games;

@@ -15,6 +15,11 @@
 using namespace std;
 class Command {
 public:
+    /**
+     * recieving paramters about the current command, and ListOfGames to make changes on
+     * @param args
+     * @param games
+     */
     virtual void execute(vector<string> args, ListOfGames* games) = 0;
     virtual ~Command() {}
 };

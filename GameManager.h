@@ -12,9 +12,17 @@
 
 class GameManager {
 public:
+    /**
+     * constructor
+     * @param g GameDetails pointer
+     */
     GameManager(GameDetails* g);
+    /**
+     * static function running a game - transfering messages between clients
+     * @param g a GameDetails - void*
+     * @return none
+     */
     static void* run(void* g);
-    bool getMoves(int soc1, int soc2);
 private:
     GameDetails* game;
 };
