@@ -128,6 +128,7 @@ void ListOfGames::listOfGames(vector<string> args) {
     if (n == 0) {
         throw "Error, connection disconnected!";
     }
+    close(socket);
     //unlock
     pthread_mutex_unlock(&list_lock);
 }

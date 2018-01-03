@@ -18,8 +18,8 @@
 #define EXISTSLEN 46
 #define JOINANOTHER "There's No Game With This Name. Please Join Another One\n"
 #define JOINANOTHERLEN 56
-#define CREATEDAGAME "A Game Was Created!\n"
-#define CREATEDLEN 20
+#define CREATEDAGAME "A Game Was Created! waiting for another player to join\n"
+#define CREATEDLEN 55
 
 class ListOfGames {
 public:
