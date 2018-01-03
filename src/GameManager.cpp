@@ -7,7 +7,7 @@
 
 #include <unistd.h>
 #include <iostream>
-#include "GameManager.h"
+#include "../include/GameManager.h"
 
 GameManager::GameManager(GameDetails *g) {
     this->game = g;

@@ -6,7 +6,7 @@
 //
 
 #include <iostream>
-#include "GameDetails.h"
+#include "../include/GameDetails.h"
 
 string GameDetails::getName() {
     return this->name;

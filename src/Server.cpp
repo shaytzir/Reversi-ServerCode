@@ -5,8 +5,8 @@
 // ID: 204468474
 //
 
-#include "Server.h"
-#include "ClientHandler.h"
+#include "../include/Server.h"
+#include "../include/ClientHandler.h"
 #include <netinet/in.h>
 #include <unistd.h>
 #include <string.h>
@@ -72,6 +72,7 @@ void Server:: start() {
         cin >> input;
     }while(strcmp(input.c_str(), "exit") != 0);
     //call the functions to close all sub sockets and sub threads
+    delete man;
     closeThreads();
     //close main thread
     pthread_cancel(exitThread);

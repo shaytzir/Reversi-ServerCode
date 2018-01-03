@@ -6,10 +6,10 @@
 //
 
 #include <iostream>
-#include "CommandsManager.h"
-#include "StartGameCommand.h"
-#include "GetGamesListCommand.h"
-#include "JoinGameCommand.h"
+#include "../include/CommandsManager.h"
+#include "../include/StartGameCommand.h"
+#include "../include/GetGamesListCommand.h"
+#include "../include/JoinGameCommand.h"
 
 CommandsManager::CommandsManager() {
     //creating the ListOfGames, holds vector of all games and runs start/join/list_games

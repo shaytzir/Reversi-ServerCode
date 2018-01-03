@@ -5,7 +5,7 @@
 // ID: 204468474
 //
 
-#include "JoinGameCommand.h"
+#include "../include/JoinGameCommand.h"
 
 void JoinGameCommand::execute(vector<string> args, ListOfGames* games) {
     //calling listofgames to run this command - joining a game

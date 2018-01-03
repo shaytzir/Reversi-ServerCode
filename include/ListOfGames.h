@@ -24,6 +24,7 @@
 class ListOfGames {
 public:
     ListOfGames(){}
+    ~ListOfGames();
     /**
      * removing a game from this list of games
      * @param gameName a name of a game to remove

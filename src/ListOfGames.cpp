@@ -8,8 +8,8 @@
 #include <cstring>
 #include <cstdlib>
 #include <unistd.h>
-#include "ListOfGames.h"
-#include "GameManager.h"
+#include "../include/ListOfGames.h"
+#include "../include/GameManager.h"
 #include <iostream>
 
 pthread_mutex_t list_lock;
@@ -192,4 +192,13 @@ void ListOfGames::joinToGame(vector<string> args) {
         pthread_join(gameThread, &status);
     }
     removeGame(game->getName());
+}
+
+ListOfGames::~ListOfGames() {
+    pthread_mutex_lock(&list_lock);
+    int gamesSize = this->games.size();
+    for (int i = 0; i < gamesSize; i++) {
+        delete this->games[i];
+    }
+    pthread_mutex_unlock(&list_lock);
 }

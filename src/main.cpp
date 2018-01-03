@@ -5,17 +5,16 @@
 // ID: 204468474
 //
 
-#include "Server.h"
+#include "../include/Server.h"
 #include <fstream>
 using namespace std;
 
 int main() {
     //read server configuration
     ifstream inFile;
-    //inFile.open("ServerConfig.txt");
-    //int port;
-    //inFile >> port;
-    int port = 8000; ///////////////////
+    inFile.open("ServerConfig.txt");
+    int port;
+    inFile >> port;
     Server server(port);
     try {
         server.start();

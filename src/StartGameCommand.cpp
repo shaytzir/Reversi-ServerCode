@@ -5,7 +5,7 @@
 // ID: 204468474
 //
 
-#include "StartGameCommand.h"
+#include "../include/StartGameCommand.h"
 
 void StartGameCommand::execute(vector<string> args, ListOfGames* games) {
     //using ListOfGames to run this command - starting a new game

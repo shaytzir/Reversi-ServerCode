@@ -6,7 +6,7 @@
 //
 
 #include <iostream>
-#include "GetGamesListCommand.h"
+#include "../include/GetGamesListCommand.h"
 
 void GetGamesListCommand::execute(vector<string> args, ListOfGames* games) {
     //calling ListOfGames to run getting the list of games
