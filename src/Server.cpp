@@ -9,8 +9,13 @@
 #include "../include/ClientHandler.h"
 #include <netinet/in.h>
 #include <unistd.h>
+#include"../include/Task.h"
+#include<iostream>
+#include<unistd.h>
 #include <string.h>
 using namespace std;
+#define THREADS_NUM 5
+#define TASKS_NUM 5
 
 #define MAX_CONNECTED_CLIENTS   10
 struct ExitStruct {
@@ -102,6 +107,10 @@ void *Server::mainThread(void *obj) {
     struct sockaddr_in clientAddress = *(ser->add);
     Server* server = ser->s;
     CommandsManager* man = ser->man;
+///////////////////////////////////////////////
+    ThreadPool pool(THREADS_NUM);
+    Task *tasks[TASKS_NUM];
+//////////////////////////////////////////////
     int i = 0;
     while(true) {
         cout << "Waiting for client connections..." << endl;
@@ -116,11 +125,17 @@ void *Server::mainThread(void *obj) {
         //creating a personal handler per client
         ClientHandler handler(clientSocket, man);
         //sub thread for this specific request
-        pthread_t* clientHandle = new pthread_t;
+        /*pthread_t* clientHandle = new pthread_t;
         //add this thread to the threads vector
         server->threads.push_back(clientHandle);
         //run the handling command function
-        int rc = pthread_create(server->threads[i], NULL, handler.handleCommand, &handler);
+        int rc = pthread_create(server->threads[i], NULL, handler.handleCommand, &handler);*/
+        tasks[i] = new Task(&handler.handleCommand, (void *) &handler);
+        pool.addTask(tasks[i]);
         i++;
+    }
+    pool.terminate();
+    for (int i = 0; i < TASKS_NUM; i++) {
+        delete tasks[i];
     }
 }

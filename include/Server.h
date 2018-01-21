@@ -11,6 +11,7 @@
 #include <vector>
 #include <unistd.h>
 #include "CommandsManager.h"
+#include "ThreadPool.h"
 
 using namespace std;
 

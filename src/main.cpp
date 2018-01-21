@@ -11,10 +11,13 @@ using namespace std;
 
 int main() {
     //read server configuration
-    ifstream inFile;
+    /*ifstream inFile;
     inFile.open("ServerConfig.txt");
     int port;
-    inFile >> port;
+    inFile >> port;*/
+    ///////////////////////////////////////
+    int port = 8000;
+    /////////////////////////////////////
     Server server(port);
     try {
         server.start();
