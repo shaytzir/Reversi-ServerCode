@@ -16,15 +16,17 @@
 using namespace std;
 #define THREADS_NUM 5
 #define TASKS_NUM 5
-
-#define MAX_CONNECTED_CLIENTS   10
 struct ExitStruct {
     int socket;
     struct sockaddr_in *add;
     socklen_t *len;
     Server* s;
     CommandsManager* man;
+    ThreadPool* pool;
+    Task** tasks;
 };
+#define MAX_CONNECTED_CLIENTS   10
+
 
 Server:: Server( int port): port(port), serverSocket(0) {
     cout << "Server" << endl;
@@ -61,7 +63,6 @@ void Server:: start() {
     exitStruct.len = &clientAddressLen;
     exitStruct.s = this;
     exitStruct.man = man;
-
     // Accept a new client connection
     pthread_t exitThread;
     //creating the main thread which runs the program
@@ -79,6 +80,12 @@ void Server:: start() {
     //call the functions to close all sub sockets and sub threads
     delete man;
     closeThreads();
+    /////////////////////////////////////
+    exitStruct.pool->terminate();
+    for (int i = 0; i < TASKS_NUM; i++) {
+        delete exitStruct.tasks[i];
+    }
+    /////////////////////////////////////
     //close main thread
     pthread_cancel(exitThread);
     pthread_join(exitThread, &status);
@@ -91,11 +98,12 @@ void Server::closeThreads() {
     for (int i = 0; i < this->clientSockets.size(); i++) {
         close(clientSockets[i]);
     }
+
     //closing all threads that ran through the program
-    for (int i = 0; i < this->threads.size(); i++) {
+    /*for (int i = 0; i < this->threads.size(); i++) {
         pthread_cancel(*this->threads[i]);
         pthread_join(*this->threads[i], &status);
-    }
+    }*/
     close(serverSocket);
 }
 
@@ -108,8 +116,10 @@ void *Server::mainThread(void *obj) {
     Server* server = ser->s;
     CommandsManager* man = ser->man;
 ///////////////////////////////////////////////
-    ThreadPool pool(THREADS_NUM);
-    Task *tasks[TASKS_NUM];
+    ThreadPool threadPool(THREADS_NUM);
+    ser->pool = &threadPool;
+    Task* tasks[TASKS_NUM];
+    ser->tasks = tasks;
 //////////////////////////////////////////////
     int i = 0;
     while(true) {
@@ -131,11 +141,7 @@ void *Server::mainThread(void *obj) {
         //run the handling command function
         int rc = pthread_create(server->threads[i], NULL, handler.handleCommand, &handler);*/
         tasks[i] = new Task(&handler.handleCommand, (void *) &handler);
-        pool.addTask(tasks[i]);
+        threadPool.addTask(tasks[i]);
         i++;
-    }
-    pool.terminate();
-    for (int i = 0; i < TASKS_NUM; i++) {
-        delete tasks[i];
     }
 }
