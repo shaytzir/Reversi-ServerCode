@@ -11,6 +11,7 @@ ThreadPool::ThreadPool(int threadsNum) : stopped(false) {
     }
     pthread_mutex_init (&lock, NULL);
 }
+
 void *ThreadPool::execute(void *arg) {
     ThreadPool *pool = (ThreadPool *) arg;
     pool->executeTasks();
@@ -37,5 +38,9 @@ void ThreadPool::terminate() {
     stopped = true;
 }
 ThreadPool::~ThreadPool() {
+    //tasksQueue.
+    /*while (!tasksQueue.empty()) {
+            tasksQueue.pop();
+    }*/
     delete[] threads;
 }

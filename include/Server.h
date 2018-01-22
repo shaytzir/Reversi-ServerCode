@@ -31,14 +31,17 @@ public:
      * starting the servers program
      */
     void start();
+
+
 private:
     int port;
-    vector<pthread_t*> threads;
+    ThreadPool* pool;
+    //vector<pthread_t*> threads;
     vector<int> clientSockets;
-    void exitNow();
     int serverSocket; // the socket's file descriptor
     void closeThreads();
     static void *mainThread(void* obj);
+    ThreadPool* getPool();
 };
 
 #endif //SERVER_SERVER_H

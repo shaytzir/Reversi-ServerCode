@@ -15,7 +15,6 @@
 #include <string.h>
 using namespace std;
 #define THREADS_NUM 5
-#define TASKS_NUM 5
 struct ExitStruct {
     int socket;
     struct sockaddr_in *add;
@@ -23,13 +22,14 @@ struct ExitStruct {
     Server* s;
     CommandsManager* man;
     ThreadPool* pool;
-    Task** tasks;
+   // Task** tasks;
 };
 #define MAX_CONNECTED_CLIENTS   10
 
 
 Server:: Server( int port): port(port), serverSocket(0) {
     cout << "Server" << endl;
+    this->pool = new ThreadPool(THREADS_NUM);
 }
 void Server:: start() {
     //creating new commands manger to pass on when dealing with clients
@@ -63,6 +63,8 @@ void Server:: start() {
     exitStruct.len = &clientAddressLen;
     exitStruct.s = this;
     exitStruct.man = man;
+    exitStruct.pool = this->pool;
+
     // Accept a new client connection
     pthread_t exitThread;
     //creating the main thread which runs the program
@@ -80,13 +82,8 @@ void Server:: start() {
     //call the functions to close all sub sockets and sub threads
     delete man;
     closeThreads();
-    /////////////////////////////////////
     exitStruct.pool->terminate();
-    for (int i = 0; i < TASKS_NUM; i++) {
-        delete exitStruct.tasks[i];
-    }
-    /////////////////////////////////////
-    //close main thread
+
     pthread_cancel(exitThread);
     pthread_join(exitThread, &status);
 }
@@ -99,11 +96,6 @@ void Server::closeThreads() {
         close(clientSockets[i]);
     }
 
-    //closing all threads that ran through the program
-    /*for (int i = 0; i < this->threads.size(); i++) {
-        pthread_cancel(*this->threads[i]);
-        pthread_join(*this->threads[i], &status);
-    }*/
     close(serverSocket);
 }
 
@@ -115,13 +107,8 @@ void *Server::mainThread(void *obj) {
     struct sockaddr_in clientAddress = *(ser->add);
     Server* server = ser->s;
     CommandsManager* man = ser->man;
-///////////////////////////////////////////////
-    ThreadPool threadPool(THREADS_NUM);
-    ser->pool = &threadPool;
-    Task* tasks[TASKS_NUM];
-    ser->tasks = tasks;
-//////////////////////////////////////////////
-    int i = 0;
+    ThreadPool* pool = ser->pool;
+
     while(true) {
         cout << "Waiting for client connections..." << endl;
         //accepting new client
@@ -134,14 +121,8 @@ void *Server::mainThread(void *obj) {
         server->clientSockets.push_back(clientSocket);
         //creating a personal handler per client
         ClientHandler handler(clientSocket, man);
-        //sub thread for this specific request
-        /*pthread_t* clientHandle = new pthread_t;
-        //add this thread to the threads vector
-        server->threads.push_back(clientHandle);
-        //run the handling command function
-        int rc = pthread_create(server->threads[i], NULL, handler.handleCommand, &handler);*/
-        tasks[i] = new Task(&handler.handleCommand, (void *) &handler);
-        threadPool.addTask(tasks[i]);
-        i++;
+
+        Task task(&handler.handleCommand, (void *) &handler);
+        pool->addTask(&task);
     }
 }
